@@ -161,7 +161,9 @@ METADATA_KEYS: Dict[str, List[Callable[[Message], Optional[str]]]] = {
         lambda metadata: metadata.get("maintainer"),
         lambda metadata: metadata.get("maintainer-email"),
     ],
-    "license": [lambda metadata: metadata.get("license")],
+    # PyPI doesn't let you set both license and license-expression, they're
+    # equivalent so just collapsing them into one.
+    "license": [lambda metadata: metadata.get("license-expression") or metadata.get("license")],
     "summary": [lambda metadata: metadata.get("summary")],
 }
 
@@ -171,6 +173,7 @@ FIELDS_TO_METADATA_KEYS = {
     "Description": "summary",
     "License-Metadata": "license",
     "License-Classifier": "license_classifier",
+    "License-Expression": "license",
 }
 
 
