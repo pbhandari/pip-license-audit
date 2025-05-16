@@ -3,13 +3,16 @@ requires = ["setuptools>=40.9.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pip-licenses"
+name = "pip-license-audit"
 description = "Dump the software license list of Python packages installed with pip."
 dynamic = ["version", "readme"]
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
     {name = "raimon", email = "raimon49@hotmail.com"}
+]
+maintainers = [
+    {name = "pbhandari", email = "pbhandari@pbhandari.ca"}
 ]
 keywords = ["pip", "pypi", "package", "license", "check"]
 classifiers = [
@@ -49,9 +52,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/raimon49/pip-licenses"
-Releases = "https://github.com/raimon49/pip-licenses/releases"
-Issues = "https://github.com/raimon49/pip-licenses/issues"
+Homepage = "https://github.com/pbhandari/pip-license-audit"
+Releases = "https://github.com/pbhandari/pip-license-audit/releases"
+Issues = "https://github.com/pbhandari/pip-license-audit/issues"
 
 [project.scripts]
 pip-licenses = "piplicenses:main"
@@ -80,3 +83,6 @@ exclude = ["venv"]
 
 [tool.coverage.run]
 include = ["piplicenses.py"]
+
+[tool.poetry]
+package-mode = false
