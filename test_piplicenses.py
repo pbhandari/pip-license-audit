@@ -22,13 +22,13 @@ import docutils.utils
 import pytest
 import tomli_w
 from _pytest.capture import CaptureFixture
+from prettytable import FRAME as RULE_FRAME
 
 import piplicenses
 from piplicenses import (
     DEFAULT_OUTPUT_FIELDS,
     LICENSE_UNKNOWN,
     RULE_ALL,
-    RULE_FRAME,
     RULE_HEADER,
     RULE_NONE,
     SYSTEM_PACKAGES,
@@ -868,6 +868,7 @@ def test_allow_only(monkeypatch) -> None:
     licenses = (
         "Bsd License",
         "Apache Software License",
+        "Apache-2.0",
         "Mozilla Public License 2.0 (MPL 2.0)",
         "Python Software Foundation License",
         "Public Domain",
@@ -1009,27 +1010,27 @@ def test_verify_args(
     parser: CompatibleArgumentParser, capsys: CaptureFixture
 ) -> None:
     # --with-license-file missing
-    with pytest.raises(SystemExit) as ex:
+    with pytest.raises(SystemExit):
         parser.parse_args(["--no-license-path"])
     capture = capsys.readouterr().err
     for arg in ("--no-license-path", "--with-license-file"):
         assert arg in capture
 
-    with pytest.raises(SystemExit) as ex:
+    with pytest.raises(SystemExit):
         parser.parse_args(["--with-notice-file"])
     capture = capsys.readouterr().err
     for arg in ("--with-notice-file", "--with-license-file"):
         assert arg in capture
 
     # --filter-strings missing
-    with pytest.raises(SystemExit) as ex:
+    with pytest.raises(SystemExit):
         parser.parse_args(["--filter-code-page=utf8"])
     capture = capsys.readouterr().err
     for arg in ("--filter-code-page", "--filter-strings"):
         assert arg in capture
 
     # invalid code-page
-    with pytest.raises(SystemExit) as ex:
+    with pytest.raises(SystemExit):
         parser.parse_args(["--filter-strings", "--filter-code-page=XX"])
     capture = capsys.readouterr().err
     for arg in ("invalid code", "--filter-code-page"):
@@ -1048,7 +1049,7 @@ def test_extract_homepage_home_page_set() -> None:
     metadata = MagicMock()
     metadata.get.return_value = "Foobar"
 
-    assert "Foobar" == extract_homepage(metadata=metadata)  # type: ignore
+    assert "Foobar" == extract_homepage(metadata=metadata)
 
     metadata.get.assert_called_once_with("home-page", None)
 
@@ -1063,7 +1064,7 @@ def test_extract_homepage_project_url_fallback() -> None:
         "Homepage, homepage",
     ]
 
-    assert "homepage" == extract_homepage(metadata=metadata)  # type: ignore
+    assert "homepage" == extract_homepage(metadata=metadata)
 
     metadata.get_all.assert_called_once_with("Project-URL", [])
 
@@ -1079,7 +1080,7 @@ def test_extract_homepage_project_url_fallback_multiple_parts() -> None:
     ]
 
     assert "homepage, foo, bar" == extract_homepage(
-        metadata=metadata  # type: ignore
+        metadata=metadata
     )
 
     metadata.get_all.assert_called_once_with("Project-URL", [])
@@ -1091,7 +1092,7 @@ def test_extract_homepage_empty() -> None:
     metadata.get.return_value = None
     metadata.get_all.return_value = []
 
-    assert None is extract_homepage(metadata=metadata)  # type: ignore
+    assert None is extract_homepage(metadata=metadata)
 
     metadata.get.assert_called_once_with("home-page", None)
     metadata.get_all.assert_called_once_with("Project-URL", [])
@@ -1107,7 +1108,7 @@ def test_extract_homepage_project_uprl_fallback_capitalisation() -> None:
         "homepage, homepage",
     ]
 
-    assert "homepage" == extract_homepage(metadata=metadata)  # type: ignore
+    assert "homepage" == extract_homepage(metadata=metadata)
 
     metadata.get_all.assert_called_once_with("Project-URL", [])
 

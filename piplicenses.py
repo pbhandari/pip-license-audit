@@ -44,7 +44,6 @@ from typing import TYPE_CHECKING, Iterable, List, Type, cast
 
 import tomli
 from prettytable import ALL as RULE_ALL
-from prettytable import FRAME as RULE_FRAME
 from prettytable import HEADER as RULE_HEADER
 from prettytable import NONE as RULE_NONE
 from prettytable import PrettyTable
@@ -54,7 +53,7 @@ if TYPE_CHECKING:
     from typing import Callable, Dict, Iterator, Optional, Sequence
 
 
-open = open  # allow monkey patching
+open = open  # noqa:A001 allow monkey patching
 
 __pkgname__ = "pip-license-audit"
 __version__ = "0.0.1"
@@ -163,7 +162,10 @@ METADATA_KEYS: Dict[str, List[Callable[[Message], Optional[str]]]] = {
     ],
     # PyPI doesn't let you set both license and license-expression, they're
     # equivalent so just collapsing them into one.
-    "license": [lambda metadata: metadata.get("license-expression") or metadata.get("license")],
+    "license": [
+        lambda metadata: metadata.get("license-expression")
+        or metadata.get("license")
+    ],
     "summary": [lambda metadata: metadata.get("summary")],
 }
 
@@ -209,7 +211,7 @@ def get_packages(
             lambda file: pattern.match(file.name), pkg_files
         )
         for rel_path in matched_rel_paths:
-            abs_path = Path(pkg.locate_file(rel_path))
+            abs_path = Path(pkg.locate_file(rel_path)) # type: ignore[arg-type]
             if not abs_path.is_file():
                 continue
             included_file = str(abs_path)
@@ -240,7 +242,7 @@ def get_packages(
             for field_selector_fn in field_selector_fns:
                 # Type hint of `Distribution.metadata` states `PackageMetadata`
                 # but it's actually of type `email.Message`
-                value = field_selector_fn(metadata)  # type: ignore
+                value = field_selector_fn(metadata) # type: ignore[arg-type]
                 if value:
                     break
             pkg_info[field_name] = value or LICENSE_UNKNOWN
@@ -409,8 +411,8 @@ def create_summary_table(args: CustomNamespace) -> PrettyTable:
     )
 
     table = factory_styled_table_with_args(args, SUMMARY_FIELD_NAMES)
-    for license, count in counts.items():
-        table.add_row([count, license])
+    for lic, count in counts.items():
+        table.add_row([count, lic])
     return table
 
 
@@ -447,7 +449,7 @@ def case_insensitive_set_diff(set_a, set_b):
     uncommon_items = set()
     set_b_lower = {item.lower() for item in set_b}
     for elem in set_a:
-        if not elem.lower() in set_b_lower:
+        if elem.lower() not in set_b_lower:
             uncommon_items.add(elem)
     return uncommon_items
 
@@ -606,11 +608,11 @@ def factory_styled_table_with_args(
 def find_license_from_classifier(classifiers: list[str]) -> list[str]:
     licenses = []
     for classifier in filter(lambda c: c.startswith("License"), classifiers):
-        license = classifier.split(" :: ")[-1]
+        lic = classifier.split(" :: ")[-1]
 
         # Through the declaration of 'Classifier: License :: OSI Approved'
-        if license != "OSI Approved":
-            licenses.append(license)
+        if lic != "OSI Approved":
+            licenses.append(lic)
 
     return licenses
 

@@ -33,8 +33,7 @@ update-depends:
 
 .PHONY: lint
 lint:
-	black .
-	isort .
+	ruff check .
 	mypy --install-types --non-interactive .
 
 .PHONY: test
