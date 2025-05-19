@@ -6,7 +6,7 @@ pip-licenses
 
 MIT License
 
-Copyright (c) 2018 raimon
+Copyright (c) 2025 pbhandari
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ if TYPE_CHECKING:
 open = open  # allow monkey patching
 
 __pkgname__ = "pip-license-audit"
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 __summary__ = (
     "Dump the software license list of Python packages installed with pip."
 )
